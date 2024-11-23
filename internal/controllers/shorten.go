@@ -3,11 +3,14 @@ package controllers
 import (
 	"html/template"
 	"net/http"
-	"strings"
+
+	"github.com/arijit-gogoi/url-shortener-go/internal/url"
 )
 
-var data map[string]string
-var shortenTmplt *template.Template
+var (
+	data         map[string]string
+	shortenTmplt *template.Template
+)
 
 func init() {
 	shortenTmplt = template.Must(template.ParseFiles("internal/views/shorten.html"))
@@ -26,23 +29,13 @@ func Shorten(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Sanitise the URL.
-	usersURL = sanitiseURL(usersURL)
-
-	// TODO: shorten the URL
+	usersURL = url.Sanitise(usersURL)
+	shortURL := url.Shorten(usersURL)
 
 	data = map[string]string{
-		"ShortURL": usersURL,
+		"ShortURL": shortURL,
 	}
 
 	// Execute the shorten template with data.
 	shortenTmplt.Execute(w, data)
-}
-
-func sanitiseURL(usersURL string) string {
-	var res string
-	if !strings.HasPrefix(usersURL, "http://") && !strings.HasPrefix(usersURL, "https://") {
-		res = "https://" + usersURL
-	}
-	return res
 }
