@@ -31,7 +31,6 @@ func Shorten(w http.ResponseWriter, r *http.Request) {
 
 	// TODO: shorten the URL
 
-	// Map the shortened URL to usersURL.
 	data = map[string]string{
 		"ShortURL": usersURL,
 	}
