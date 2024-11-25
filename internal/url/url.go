@@ -14,10 +14,9 @@ func Shorten(usersURL string) string {
 	return shortURL
 }
 
-func Sanitise(usersURL string) string {
-	var res string
-	if !strings.HasPrefix(usersURL, "http://") && !strings.HasPrefix(usersURL, "https://") {
-		res = "https://" + usersURL
+func Sanitise(originalURL string) string {
+	if !strings.HasPrefix(originalURL, "http://") && !strings.HasPrefix(originalURL, "https://") {
+		originalURL = "https://" + originalURL
 	}
-	return res
+	return originalURL
 }
