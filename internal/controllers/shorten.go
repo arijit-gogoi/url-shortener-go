@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"database/sql"
+	"fmt"
 	"html/template"
 	"net/http"
 
@@ -26,16 +27,15 @@ func Shorten(sqlitedb *sql.DB) http.HandlerFunc {
 		}
 
 		// userURL is the URL that the client wants to shorten.
-		usersURL := r.FormValue("url")
-		if usersURL == "" {
+		originalURL := r.FormValue("url")
+		if originalURL == "" {
 			http.Error(w, "URL not provided", http.StatusBadRequest)
 			return
 		}
 
-		usersURL = url.Sanitise(usersURL)
-		shortURL := url.Shorten(usersURL)
-
-		err := db.StoreURL(sqlitedb, shortURL, usersURL)
+		originalURL = url.Sanitise(originalURL)
+		shortURL := url.Shorten(originalURL)
+		err := db.StoreURL(sqlitedb, shortURL, originalURL)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
@@ -63,5 +63,6 @@ func Proxy(sqlitedb *sql.DB) http.HandlerFunc {
 			return
 		}
 		http.Redirect(w, r, originalURL, http.StatusPermanentRedirect)
+		fmt.Printf("Redirected to: ", originalURL)
 	}
 }
