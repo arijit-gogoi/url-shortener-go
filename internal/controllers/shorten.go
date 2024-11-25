@@ -63,6 +63,6 @@ func Proxy(sqlitedb *sql.DB) http.HandlerFunc {
 			return
 		}
 		http.Redirect(w, r, originalURL, http.StatusPermanentRedirect)
-		fmt.Printf("Redirected to: ", originalURL)
+		fmt.Printf("Redirected to: %v", originalURL)
 	}
 }
