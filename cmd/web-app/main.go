@@ -17,7 +17,8 @@ func main() {
 	}
 	defer sqlitedb.Close()
 
-	if err := db.CreateTable(sqlitedb); err != nil {
+	err = db.CreateTable(sqlitedb)
+	if err != nil {
 		log.Fatal(err)
 	}
 
@@ -25,7 +26,8 @@ func main() {
 	mux.HandleFunc("/", controllers.ShowIndex)
 	mux.HandleFunc("/shorten", controllers.Shorten(sqlitedb))
 
-	if err := http.ListenAndServe(":8080", mux); err != nil {
+	err = http.ListenAndServe(":8080", mux)
+	if err != nil {
 		log.Fatal(err)
 	}
 }

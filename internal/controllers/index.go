@@ -12,7 +12,8 @@ func init() {
 }
 
 func ShowIndex(w http.ResponseWriter, r *http.Request) {
-	if err := tmplt.Execute(w, nil); err != nil {
+	err := tmplt.Execute(w, nil)
+	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
