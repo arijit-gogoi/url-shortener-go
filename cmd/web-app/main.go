@@ -23,7 +23,13 @@ func main() {
 	}
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("/", controllers.ShowIndex)
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/" {
+			controllers.ShowIndex(w, r)
+		} else {
+			controllers.Proxy(sqlitedb)
+		}
+	})
 	mux.HandleFunc("/shorten", controllers.Shorten(sqlitedb))
 
 	err = http.ListenAndServe(":8080", mux)

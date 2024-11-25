@@ -48,3 +48,20 @@ func Shorten(sqlitedb *sql.DB) http.HandlerFunc {
 		shortenTmplt.Execute(w, data)
 	}
 }
+
+func Proxy(sqlitedb *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		shortURL := r.URL.Path[1:]
+		if shortURL == "" {
+			http.Error(w, "URL Not Provided", http.StatusBadRequest)
+			return
+		}
+
+		originalURL, err := db.GetOriginalURL(sqlitedb, shortURL)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusNotFound)
+			return
+		}
+		http.Redirect(w, r, originalURL, http.StatusPermanentRedirect)
+	}
+}
