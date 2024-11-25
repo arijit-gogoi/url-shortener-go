@@ -27,7 +27,8 @@ func main() {
 		if r.URL.Path == "/" {
 			controllers.ShowIndex(w, r)
 		} else {
-			controllers.Proxy(sqlitedb)
+			shortURLHandler := controllers.Proxy(sqlitedb)
+			shortURLHandler(w, r)
 		}
 	})
 	mux.HandleFunc("/shorten", controllers.Shorten(sqlitedb))
