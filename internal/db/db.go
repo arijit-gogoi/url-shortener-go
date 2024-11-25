@@ -18,8 +18,13 @@ func CreateTable(db *sql.DB) error {
 
 // StoreURL inserts the new short URL and the original URL into the database.
 func StoreURL(db *sql.DB, shortURL, originalURL string) error {
-	query := `INSERT INTO urls (short_url, original_url) VALUES (?, ?)`
-	_, err := db.Exec(query, shortURL, originalURL)
+	statement := `INSERT INTO urls (short_url, original_url) VALUES (?, ?)`
+	stmnt, err := db.Prepare(statement)
+	if err != nil {
+		return err
+	}
+	defer stmnt.Close()
+	_, err = stmnt.Exec(shortURL, originalURL)
 	return err
 }
 
